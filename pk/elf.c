@@ -88,9 +88,15 @@ void load_elf(const char* fn, elf_info* info)
         if (do_mprotect(vaddr - prepad, ph[i].p_filesz + prepad, prot))
           goto fail;
       size_t mapped = ROUNDUP(ph[i].p_filesz + prepad, RISCV_PGSIZE) - prepad;
-      if (ph[i].p_memsz > mapped)
-        if (__do_mmap(vaddr + mapped, ph[i].p_memsz - mapped, prot, flags|MAP_ANONYMOUS, 0, 0) != vaddr + mapped)
+      if (ph[i].p_memsz > mapped) {
+        size_t len = ph[i].p_memsz - mapped;
+        vaddr += mapped;
+        if (__do_mmap(vaddr, len, prot, flags|MAP_ANONYMOUS, 0, 0) != vaddr)
           goto fail;
+#ifndef PK_ENABLE_ZERO_MMAP
+        memset((void *)vaddr, 0, len);
+#endif
+      }
     }
   }
 

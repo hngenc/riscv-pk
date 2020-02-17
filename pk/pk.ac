@@ -4,3 +4,8 @@ AC_ARG_ENABLE([vm], AS_HELP_STRING([--disable-vm], [Disable virtual memory]))
 AS_IF([test "x$enable_vm" != "xno"], [
   AC_DEFINE([PK_ENABLE_VM],,[Define if virtual memory support is enabled])
 ])
+
+AC_ARG_ENABLE([zero_mmap], AS_HELP_STRING([--enable-zero-mmap], [Enable zeroing for MAP_ANONYMOUS]))
+AS_IF([test "x$enable_zero_mmap" = "xyes"], [
+  AC_DEFINE([PK_ENABLE_ZERO_MMAP],,[Define if zeroing is enabled])
+])

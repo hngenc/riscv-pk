@@ -678,6 +678,7 @@ with_mem_start
 enable_zero_bss
 enable_optional_subprojects
 enable_vm
+enable_zero_mmap
 enable_logo
 with_payload
 with_logo
@@ -1319,6 +1320,7 @@ Optional Features:
   --enable-optional-subprojects
                           Enable all optional subprojects
   --disable-vm            Disable virtual memory
+  --enable-zero-mmap      Enable zeroing for MAP_ANONYMOUS
   --enable-logo           Enable boot logo
   --enable-boot-machine   Run payload in machine mode
   --disable-fp-emulation  Disable floating-point emulation
@@ -4209,6 +4211,19 @@ if test "x$enable_vm" != "xno"; then :
 
 
 $as_echo "#define PK_ENABLE_VM /**/" >>confdefs.h
+
+
+fi
+
+# Check whether --enable-zero_mmap was given.
+if test "${enable_zero_mmap+set}" = set; then :
+  enableval=$enable_zero_mmap;
+fi
+
+if test "x$enable_zero_mmap" = "xyes"; then :
+
+
+$as_echo "#define PK_ENABLE_ZERO_MMAP /**/" >>confdefs.h
 
 
 fi

@@ -33,7 +33,9 @@ static uintptr_t __page_alloc()
 {
   kassert(next_free_page != free_pages);
   uintptr_t addr = first_free_page + RISCV_PGSIZE * next_free_page++;
+#ifdef PK_ENABLE_ZERO_MMAP
   memset((void*)addr, 0, RISCV_PGSIZE);
+#endif
   return addr;
 }
 
@@ -184,11 +186,15 @@ static int __handle_page_fault(uintptr_t vaddr, int prot)
       size_t flen = MIN(RISCV_PGSIZE, v->length - (vaddr - v->addr));
       ssize_t ret = file_pread(v->file, (void*)vaddr, flen, vaddr - v->addr + v->offset);
       kassert(ret > 0);
+#ifdef PK_ENABLE_ZERO_MMAP
       if (ret < RISCV_PGSIZE)
         memset((void*)vaddr + ret, 0, RISCV_PGSIZE - ret);
+#endif
     }
+#ifdef PK_ENABLE_ZERO_MMAP
     else
       memset((void*)vaddr, 0, RISCV_PGSIZE);
+#endif
     __vmr_decref(v, 1);
     *pte = pte_create(ppn, prot_to_type(v->prot, 1));
   }

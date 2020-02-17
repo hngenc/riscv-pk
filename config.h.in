@@ -42,6 +42,9 @@
 /* Define if virtual memory support is enabled */
 #undef PK_ENABLE_VM
 
+/* Define if zeroing is enabled */
+#undef PK_ENABLE_ZERO_MMAP
+
 /* Define if the DTS is to be displayed */
 #undef PK_PRINT_DEVICE_TREE
 
