@@ -428,6 +428,30 @@ int sys_getdents(int fd, void* dirbuf, int count)
   return 0; //stub
 }
 
+/* CS152 Lab 3: Spectre */
+
+#define L1_CACHE_BYTES 64
+uint8_t leak_array[2*L1_CACHE_BYTES] __attribute__ ((aligned (L1_CACHE_BYTES)));
+
+int sys_leak(size_t index, int shift)
+{
+  unsigned long m;
+  /* Use divides to artificially increase branch resolution latency */
+  asm volatile (
+    "div %0, zero, zero\t\n"
+    "div %0, %0, zero\t\n"
+    "div %0, %0, zero\t\n"
+    "div %0, %0, zero\t\n"
+    : "=r" (m));
+
+  if (index < (ARRAY_SIZE(leak_array) & m)) {
+    uint8_t data = leak_array[index];
+    index = (data >> shift) & 0x1;
+    return leak_array[index * L1_CACHE_BYTES];
+  }
+  return -1;
+}
+
 static int sys_stub_success()
 {
   return 0;
@@ -489,6 +513,7 @@ long do_syscall(long a0, long a1, long a2, long a3, long a4, long a5, unsigned l
     [SYS_set_tid_address] = sys_stub_nosys,
     [SYS_set_robust_list] = sys_stub_nosys,
     [SYS_madvise] = sys_stub_nosys,
+    [SYS_leak] = sys_leak,
   };
 
   const static void* old_syscall_table[] = {
