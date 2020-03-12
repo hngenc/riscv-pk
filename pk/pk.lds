@@ -59,6 +59,12 @@ SECTIONS
   . = ALIGN(16);
    _fdata = .;
 
+  /* CS152 Lab 3 */
+  .data.secret :
+  {
+    *(.data.secret)
+  }
+
   /* data: Writable data */
   .data : 
   {
@@ -99,3 +105,7 @@ SECTIONS
   . = ALIGN(0x1000);
   _end = .;
 }
+
+/* CS152 Lab 3 */
+/* Force section to be included */
+EXTERN( secret )

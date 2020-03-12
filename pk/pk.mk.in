@@ -25,6 +25,7 @@ pk_c_srcs = \
 
 pk_asm_srcs = \
 	entry.S \
+	secret.S \
 
 pk_test_srcs =
 
