@@ -171,10 +171,12 @@ static void wake_harts()
 void init_first_hart(uintptr_t hartid, uintptr_t dtb)
 {
   // Confirm console as early as possible
+#ifndef PK_ENABLE_CS152
   query_uart(dtb);
   query_uart16550(dtb);
+#endif
   query_htif(dtb);
-  printm("bbl loader\r\n");
+  putstring("bbl loader\r\n");
 
   hart_init();
   hls_init(0); // this might get called again from parse_config_string
@@ -183,6 +185,7 @@ void init_first_hart(uintptr_t hartid, uintptr_t dtb)
   query_finisher(dtb);
 
   query_mem(dtb);
+#ifndef PK_ENABLE_CS152
   query_harts(dtb);
   query_clint(dtb);
   query_plic(dtb);
@@ -193,6 +196,7 @@ void init_first_hart(uintptr_t hartid, uintptr_t dtb)
   plic_init();
   hart_plic_init();
   //prci_test();
+#endif
   memory_init();
   boot_loader(dtb);
 }

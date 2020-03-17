@@ -23,6 +23,7 @@ void __attribute__((noreturn)) bad_trap(uintptr_t* regs, uintptr_t dummy, uintpt
 
 static uintptr_t mcall_console_putchar(uint8_t ch)
 {
+#ifndef PK_ENABLE_CS152
   if (uart) {
     uart_putchar(ch);
   } else if (uart16550) {
@@ -30,6 +31,9 @@ static uintptr_t mcall_console_putchar(uint8_t ch)
   } else if (htif) {
     htif_console_putchar(ch);
   }
+#else
+  htif_console_putchar(ch);
+#endif
   return 0;
 }
 

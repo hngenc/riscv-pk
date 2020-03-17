@@ -33,6 +33,9 @@
 /* Define if subproject MCPPBS_SPROJ_NORM is enabled */
 #undef PK_ENABLED
 
+/* Define if CS152-specific patches are enabled */
+#undef PK_ENABLE_CS152
+
 /* Define if floating-point emulation is enabled */
 #undef PK_ENABLE_FP_EMULATION
 

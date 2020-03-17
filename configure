@@ -684,6 +684,7 @@ with_payload
 with_logo
 enable_boot_machine
 enable_fp_emulation
+enable_cs152
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1324,6 +1325,7 @@ Optional Features:
   --enable-logo           Enable boot logo
   --enable-boot-machine   Run payload in machine mode
   --disable-fp-emulation  Disable floating-point emulation
+  --enable-cs152          Exclude features not needed for CS152 Lab 3
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -4479,6 +4481,19 @@ if test "x$enable_fp_emulation" != "xno"; then :
 
 
 $as_echo "#define PK_ENABLE_FP_EMULATION /**/" >>confdefs.h
+
+
+fi
+
+# Check whether --enable-cs152 was given.
+if test "${enable_cs152+set}" = set; then :
+  enableval=$enable_cs152;
+fi
+
+if test "x$enable_cs152" = "xyes"; then :
+
+
+$as_echo "#define PK_ENABLE_CS152 /**/" >>confdefs.h
 
 
 fi

@@ -4,3 +4,8 @@ AC_ARG_ENABLE([fp-emulation], AS_HELP_STRING([--disable-fp-emulation], [Disable 
 AS_IF([test "x$enable_fp_emulation" != "xno"], [
   AC_DEFINE([PK_ENABLE_FP_EMULATION],,[Define if floating-point emulation is enabled])
 ])
+
+AC_ARG_ENABLE([cs152], AS_HELP_STRING([--enable-cs152], [Exclude features not needed for CS152 Lab 3]))
+AS_IF([test "x$enable_cs152" = "xyes"], [
+  AC_DEFINE([PK_ENABLE_CS152],,[Define if CS152-specific patches are enabled])
+])
