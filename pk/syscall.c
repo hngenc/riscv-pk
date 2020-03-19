@@ -438,16 +438,20 @@ int sys_leak(size_t index, int shift)
   unsigned long m;
   /* Use divides to artificially increase branch resolution latency */
   asm volatile (
-    "div %0, zero, zero\t\n"
+    "div %0, %1, zero\t\n"
     "div %0, %0, zero\t\n"
     "div %0, %0, zero\t\n"
     "div %0, %0, zero\t\n"
-    : "=r" (m));
+    "div %0, %0, zero\t\n"
+    : "=r" (m)
+    : "r" (index));
 
   if (index < (ARRAY_SIZE(leak_array) & m)) {
     uint8_t data = leak_array[index];
     index = (data >> shift) & 0x1;
-    return leak_array[index * L1_CACHE_BYTES];
+    data = leak_array[index * L1_CACHE_BYTES];
+    asm volatile ("rdcycle zero"); // Speculation barrier
+    return data;
   }
   return -1;
 }
