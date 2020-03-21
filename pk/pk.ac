@@ -9,3 +9,8 @@ AC_ARG_ENABLE([zero_mmap], AS_HELP_STRING([--enable-zero-mmap], [Enable zeroing 
 AS_IF([test "x$enable_zero_mmap" = "xyes"], [
   AC_DEFINE([PK_ENABLE_ZERO_MMAP],,[Define if zeroing is enabled])
 ])
+
+AC_ARG_WITH([secret], AS_HELP_STRING([--with-secret], [Specify secret data for CS152 Lab 3]),
+  [], [with_secret=${srcdir}/pk/secret/pi.txt])
+AS_IF([${srcdir}/pk/secret/hex2asm $with_secret > secret.gen.S],
+  [], [AC_MSG_ERROR([failed to convert secret data])])

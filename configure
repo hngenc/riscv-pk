@@ -679,6 +679,7 @@ enable_zero_bss
 enable_optional_subprojects
 enable_vm
 enable_zero_mmap
+with_secret
 enable_logo
 with_payload
 with_logo
@@ -1333,6 +1334,7 @@ Optional Packages:
   --with-arch             Set the RISC-V architecture
   --with-abi              Set the RISC-V ABI
   --with-mem-start        Set physical memory start address
+  --with-secret           Specify secret data for CS152 Lab 3
   --with-payload          Set ELF payload for bbl
   --with-logo             Specify a better logo
 
@@ -4228,6 +4230,20 @@ if test "x$enable_zero_mmap" = "xyes"; then :
 $as_echo "#define PK_ENABLE_ZERO_MMAP /**/" >>confdefs.h
 
 
+fi
+
+
+# Check whether --with-secret was given.
+if test "${with_secret+set}" = set; then :
+  withval=$with_secret;
+else
+  with_secret=${srcdir}/pk/secret/pi.txt
+fi
+
+if ${srcdir}/pk/secret/hex2asm $with_secret > secret.gen.S; then :
+
+else
+  as_fn_error $? "failed to convert secret data" "$LINENO" 5
 fi
 
 
