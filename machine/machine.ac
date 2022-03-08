@@ -9,3 +9,8 @@ AC_ARG_ENABLE([cs152], AS_HELP_STRING([--enable-cs152], [Exclude features not ne
 AS_IF([test "x$enable_cs152" = "xyes"], [
   AC_DEFINE([PK_ENABLE_CS152],,[Define if CS152-specific patches are enabled])
 ])
+
+AC_ARG_WITH([dts], AS_HELP_STRING([--with-dts], [Specify a customize dts]),
+  [AC_SUBST([CUSTOM_DTS], $with_dts, [customize dts])],
+  [AC_SUBST([CUSTOM_DTS], [no], [customize dts])]
+)

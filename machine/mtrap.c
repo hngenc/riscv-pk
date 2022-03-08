@@ -8,6 +8,7 @@
 #include "vm.h"
 #include "uart.h"
 #include "uart16550.h"
+#include "uart_litex.h"
 #include "finisher.h"
 #include "fdt.h"
 #include "unprivileged_memory.h"
@@ -28,6 +29,8 @@ static uintptr_t mcall_console_putchar(uint8_t ch)
     uart_putchar(ch);
   } else if (uart16550) {
     uart16550_putchar(ch);
+  } else if (uart_litex) {
+    uart_litex_putchar(ch);
   } else if (htif) {
     htif_console_putchar(ch);
   }
@@ -73,6 +76,8 @@ static uintptr_t mcall_console_getchar()
     return uart_getchar();
   } else if (uart16550) {
     return uart16550_getchar();
+  } else if (uart_litex) {
+    return uart_litex_getchar();
   } else if (htif) {
     return htif_console_getchar();
   } else {
@@ -177,7 +182,7 @@ send_ipi:
 
 void redirect_trap(uintptr_t epc, uintptr_t mstatus, uintptr_t badaddr)
 {
-  write_csr(sbadaddr, badaddr);
+  write_csr(stval, badaddr);
   write_csr(sepc, epc);
   write_csr(scause, read_csr(mcause));
   write_csr(mepc, read_csr(stvec));
@@ -195,7 +200,7 @@ void redirect_trap(uintptr_t epc, uintptr_t mstatus, uintptr_t badaddr)
 
 void pmp_trap(uintptr_t* regs, uintptr_t mcause, uintptr_t mepc)
 {
-  redirect_trap(mepc, read_csr(mstatus), read_csr(mbadaddr));
+  redirect_trap(mepc, read_csr(mstatus), read_csr(mtval));
 }
 
 static void machine_page_fault(uintptr_t* regs, uintptr_t mcause, uintptr_t mepc)
@@ -217,7 +222,7 @@ static void machine_page_fault(uintptr_t* regs, uintptr_t mcause, uintptr_t mepc
       goto fail;
     }
 
-    return redirect_trap(regs[12], regs[13], read_csr(mbadaddr));
+    return redirect_trap(regs[12], regs[13], read_csr(mtval));
   }
 
 fail:
