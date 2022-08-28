@@ -57,6 +57,8 @@
 #define SYS_set_robust_list 99
 #define SYS_madvise 233
 #define SYS_statx 291
+#define SYS_futex 98
+#define SYS_gettid 178
 
 #define OLD_SYSCALL_THRESHOLD 1024
 #define SYS_open 1024
